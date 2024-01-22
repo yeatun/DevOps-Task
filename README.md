@@ -59,7 +59,35 @@ Run the following commands to build the Docker image:
 docker build -t your-docker-username/weather-api:latest .
 ```
 ## CI/CD Pipeline
+# Jenkins Configuration for Polling Changes
 
+## Overview
+
+This section provides instructions on how to configure Jenkins to poll changes in SCM at a regular interval. Polling SCM is a common practice in continuous integration to automatically trigger builds when changes are detected in the source code repository.
+
+## Configuration Steps
+
+### 1. Navigate to Jenkins Dashboard
+
+Open your Jenkins instance and navigate to the dashboard.
+
+### 2. Open the Job Configuration
+
+Locate and click on the Jenkins job for which you want to enable SCM polling.
+
+### 3. Configure Polling SCM
+
+Scroll down to the "Build Triggers" section in the job configuration.
+
+- Check the option for "Poll SCM" to enable SCM polling.
+
+### 4. Set Polling Schedule
+
+In the "Schedule" text field, enter the cron expression for polling at a 2-minute interval:
+
+```bash
+*/2 * * * *
+```
 ### Pipeline Configuration
 To establish a connection between a Jenkins CI/CD server and the Kubernetes cluster, you need to specify the Kubernetes configuration file in the Jenkins server.
 
