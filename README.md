@@ -55,7 +55,7 @@ The Dockerfile in the project root directory is configured to create a lightweig
 
 Run the following commands to build the Docker image:
 
-```bash
+``` bash
 docker build -t your-docker-username/weather-api:latest .
 ```
 ## CI/CD Pipeline
@@ -96,8 +96,9 @@ The Jenkins pipeline for this project is defined in the Jenkinsfile. Below is an
 ## kubernetes-configuration
 ### Secrets
 Create a Kubernetes Secret for sensitive information like API keys:
-```kubectl create secret generic openweathermap-api-key --from-literal=api-key="YOUR_API_KEY_HERE"
-```
+    ```bash
+    kubectl create secret generic openweathermap-api-key --from-literal=api-key="YOUR_API_KEY_HERE"
+    ```
 ## Terraform-Ansible
 
 Automate Kubernetes cluster creation using on-premise servers via Digital Rebar, Terraform and Ansible
@@ -106,13 +107,13 @@ here use Digital Rebar, Terraform, and Ansible inside a virtual machine on Hyper
 The choice to incorporate the Digital Rebar platform into  automation workflow for machine provisioning, alongside traditional tools like Terraform and cloud providers, stems from its unique capabilities tailored for on-premise environments. While Terraform and cloud providers excel in managing cloud resources, Digital Rebar specializes in orchestrating bare-metal and on-premise infrastructure, bridging the gap between software-defined infrastructure and physical hardware. It offers a robust set of features, including automated discovery, provisioning, and configuration management, making it a versatile solution for complex, heterogeneous on-premise setups. By integrating Digital Rebar into our automation strategy, we gain the flexibility to efficiently provision and manage on-premise machines, ensuring a seamless and adaptable approach to infrastructure automation.
 
 ### Prerequisites
-•	Windows 10 Professional, Enterprise, or Education
-•	PowerShell (Typically included with Windows 10)
-•	PuTTY
-•	Debian 10 Firmware ISO
-•	ubuntu-20.04.3-live-server-amd64 iso image for kubernetes cluster (or any other linux OS iso you want for your cluster)
-•	Hyper-V
-•	RAM of your PC should be minimum 16GB (preferably more)
+-	Windows 10 Professional, Enterprise, or Education
+-	PowerShell (Typically included with Windows 10)
+-	PuTTY
+-	Debian 10 Firmware ISO
+-	ubuntu-20.04.3-live-server-amd64 iso image for kubernetes cluster (or any other linux OS iso you want for your cluster)
+-	Hyper-V
+-	RAM of your PC should be minimum 16GB (preferably more)
 
 ### Configuring Terraform in Control Machine
 
@@ -173,17 +174,17 @@ sudo nano master.yml
 sudo nano join-workers.yml
 ### Run the automation
 To run the automation process to create the kubernetes cluster We need to do the following steps:
-•	Make sure the Control machine and the target machines are Turned on in Hyper-V
-•	SSH using putty into the control machine
-•	Go to the directory where terraform file is kept
-•	Run this command:
+-	Make sure the Control machine and the target machines are Turned on in Hyper-V
+-	SSH using putty into the control machine
+-	Go to the directory where terraform file is kept
+-	Run this command:
 export RS_ENDPOINT=https://<ip_address_of_your_endpoint>:8092/
-(in this case it is 192.168.121.11 )
-export RS_KEY=rocketskates:<password you changed in step  67 >
-•	Run terraform Commands:
-terraform init
-terraform plan
-terraform apply
+
+export RS_KEY=rocketskates:<password >
+Run terraform Commands:
+- terraform init
+- terraform plan
+- terraform apply
 
 ### Explanation of the terraform configuration file
 
