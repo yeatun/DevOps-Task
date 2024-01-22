@@ -1,0 +1,92 @@
+node
+{
+    stage("Git Clone")
+      {
+        git credentialsId: 'GITHUB', url: 'https://github.com/yeatun/DevOps-Task.git', branch: 'main'
+      }
+      
+
+        stage("Restore packages")
+            {
+            sh "dotnet restore ${workspace}/WeatherAPI/WeatherAPI/WeatherAPI.csproj"
+             }
+          
+          
+    stage('Build')
+        {
+            sh "dotnet restore ${workspace}/WeatherAPI/WeatherAPI/WeatherAPI.csproj"
+        }
+    stage('Pack')
+         {
+           sh "dotnet restore ${workspace}/WeatherAPI/WeatherAPI/WeatherAPI.csproj"
+            }
+          
+      
+
+            
+      stage("Docker build"){
+        
+         dir("WeatherAPI/") {
+             sh 'docker version'
+           sh 'docker build . -t 01521433811/weatherapi -f WeatherAPI/Dockerfile'
+           sh 'docker image list'
+           sh 'docker tag 01521433811/weatherapi 01521433811/weatherapi:$BUILD_NUMBER'
+           
+        }
+        
+    }
+      stage("Docker hub Login")
+                  withCredentials([string(credentialsId: 'PRIVATE_REGISTRY_PASSWORD', variable: 'PASSWORD')]) 
+            {
+                sh 'docker login -u 01521433811 -p $PASSWORD'
+            }
+            
+            stage("Push Image to docker Hub")
+      {
+            sh 'docker push 01521433811/weatherapi:$BUILD_NUMBER'
+      }
+        stage("SSH Into AMSL-Master node") 
+      {
+          environment{
+          Master_Pass = credentialsId('MASTER_NODE_PASSWORD')
+      }
+      
+          withCredentials([string(credentialsId: 'MASTER_NODE_PASSWORD', variable: 'SECRET')])
+          {
+            def remote = [:]
+            remote.name = 'amsl-master'
+            remote.host = '192.168.97.31'
+            remote.user = 'devadmin'
+            remote.password = "${SECRET}"
+            remote.allowAnyHosts = true
+          
+              
+              /* might going to be changed */
+                 stage('Delete all files') 
+                 {
+                    sshCommand remote: remote, command: "kubectl delete deploy,rs,po,svc -l app=weatherapi -n weather"
+                 
+                 }
+                
+
+                  stage('Copy yaml onto amsl-master') 
+                  {
+                    sshPut remote: remote, from: 'weatherDeploy.yaml', into: '.'
+                  }
+
+              
+                
+                
+                stage('Update Image Tag') {
+                    sshCommand remote: remote, command: "sed -ie s/TAG_NUMBER/$BUILD_NUMBER/g weatherDeploy.yaml"
+                }
+                
+                stage('Deploy Dotnet API') {
+                  sshCommand remote: remote, command: "kubectl apply -f weatherDeploy.yaml"
+                }
+          }
+          
+    } 
+      
+     
+}
