@@ -18,7 +18,13 @@ spec:
       containers:
       - name: weatherapi
         image: 01521433811/weatherapi:TAG_NUMBER
-        
+        env:
+          - name: OPENWEATHERMAP_API_KEY
+            valueFrom:
+              secretKeyRef:
+                name: openweathermap-api-key
+                key: api-key
+
         ports:
         - name: http
           protocol: TCP
