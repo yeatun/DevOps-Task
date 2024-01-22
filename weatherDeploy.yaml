@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: weatherApi
+  namespace: weather
+  labels:
+    app: weatherApi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: weatherApi
+  template:
+    metadata:
+      labels:
+        app: weatherApi
+    spec:
+      containers:
+      - name: weatherApi
+        image: 01521433811/weatherapi:TAG_NUMBER
+        
+        ports:
+        - name: http
+          protocol: TCP
+          containerPort: 80
+        resources:
+          requests:
+            cpu: "10m"
+            memory: 100Mi
+          limits:
+            cpu: "100m"
+            memory: 1000Mi
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: weatherApi
+  namespace: weather
+spec:
+  selector:
+    app: weatherApi
+  type: LoadBalancer
+  ports:
+  - name: http
+    nodePort: 32048
+    port: 80
+    targetPort: 80
+    protocol: TCP
