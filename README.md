@@ -96,7 +96,7 @@ The Jenkins pipeline for this project is defined in the Jenkinsfile. Below is an
 ## kubernetes-configuration
 ### Secrets
 Create a Kubernetes Secret for sensitive information like API keys:
-    ```bash
+    ```
     kubectl create secret generic openweathermap-api-key --from-literal=api-key="YOUR_API_KEY_HERE"
     ```
 ## Terraform-Ansible
