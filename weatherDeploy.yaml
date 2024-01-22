@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: weatherApi
+  name: weatherapi
   namespace: weather
   labels:
-    app: weatherApi
+    app: weatherapi
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: weatherApi
+      app: weatherapi
   template:
     metadata:
       labels:
-        app: weatherApi
+        app: weatherapi
     spec:
       containers:
-      - name: weatherApi
+      - name: weatherapi
         image: 01521433811/weatherapi:TAG_NUMBER
         
         ports:
@@ -35,11 +35,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: weatherApi
+  name: weatherapi
   namespace: weather
 spec:
   selector:
-    app: weatherApi
+    app: weatherapi
   type: LoadBalancer
   ports:
   - name: http
